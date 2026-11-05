@@ -1,0 +1,2 @@
+@echo off
+.\main "../examples/projects/import/main.balu" -ir "../examples/projects/import/out/main.balu.ir" -decompile "../examples/projects/import/out/main.balu.balud" -st "../examples/projects/import/out/main.balu.balut"

@@ -1,0 +1,4 @@
+alias long = int64;
+alias ulong = uint64;
+alias short = int16;
+alias ushort = uint16;
