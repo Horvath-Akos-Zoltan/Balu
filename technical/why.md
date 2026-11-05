@@ -1,6 +1,6 @@
 # Decisions
 ## PreCompiler
-### Un auto-deletable variables:
+### Un-auto-deletable variables:
 [//]: # (2026. 10. 06. 16:01)
 - if left undeleted, they will yield a warning and get automatically deleted at the end of the scope, instead of the last known usage
     - if the user marks a variable as `used` they probably have a good reason for it
