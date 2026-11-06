@@ -14,7 +14,7 @@ namespace ast::decompiler {
         return result;
     }
     wstring DecompileBlockStmt(ast::BlockStmt* block, int indent = 0) {
-        wstring result = wstring(indent * 4, L' ') + L"{\n";
+        wstring result = wstring(indent * 4, L' ') + (block->isScopeless ? L"<> " : L"") + L"{\n";
         for (ast::Stmt* stmt : block->statements) {
             result += DecompileStatement(stmt, indent + 1) + L";\n";
         }

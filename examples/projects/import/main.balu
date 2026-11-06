@@ -1,4 +1,10 @@
-import "types.baluh";
+import "types.baluh"
 
-const i64: long = 0;
-const u64: ulong = 0;
+<> {
+    
+}
+
+//const i64: long = 0;
+// const u64: ulong = 0;
+
+const veryI64: int64 = 0i64;

@@ -1,5 +1,6 @@
 #include "init.hpp"
 #include <codecvt>
+#include <filesystem>
 
 #pragma region Structs
 wostream& operator<<(wostream& os, const CommandLineValuePair& pair) {
@@ -259,9 +260,13 @@ int main(int argc, char* argv[]) {
     #pragma region Token outfile
     if (!SToutfilename.empty()) {
         string narrowSToutFilename(SToutfilename.begin(), SToutfilename.end());
+        filesystem::path p(narrowSToutFilename);
+        if (p.has_parent_path() && !filesystem::exists(p.parent_path())) {
+            filesystem::create_directories(p.parent_path()); // Létrehozza a teljes mappastruktúrát
+        }
         ofstream stOutFile(narrowSToutFilename.c_str());
         if (stOutFile.is_open()) {
-            for (int i = 0; i < tokens.size() - 1; i++) {
+            for (size_t i = 0; i < tokens.size() - 1; i++) {
                 const auto& token = tokens[i];
                 wstringstream ss;
                 token.Debug(ss);

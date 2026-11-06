@@ -2,7 +2,7 @@
 
 namespace ast::precompiler {
     void PreCompileBlockStmt(BlockStmt* blockStmt, VariableRegistry& varReg) {
-        uint64_t scope = varReg.AddScope();
+        uint64_t scope = blockStmt->isScopeless ? varReg.currentScope : varReg.AddScope();
 
         for (auto& stmt : blockStmt->statements) {
             if (stmt != nullptr) PreCompile(stmt, varReg, blockStmt);
@@ -42,6 +42,6 @@ namespace ast::precompiler {
             }
         }
         blockStmt->Fix();
-        varReg.RemoveScope(scope);
+        if (!blockStmt->isScopeless) varReg.RemoveScope(scope);
     }
 }

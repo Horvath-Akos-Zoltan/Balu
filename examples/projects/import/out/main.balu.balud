@@ -1,0 +1,5 @@
+// [Balu] Decompiled from ../examples/projects/import/main.balu
+// Command used: main ../examples/projects/import/main.balu  -no-opt -ir=../examples/projects/import/out/main.balu.ir -decompile=../examples/projects/import/out/main.balu.balud -st=../examples/projects/import/out/main.balu.balut -ast=../examples/projects/import/out/main.balu.ast
+<unknown stmt>;
+<> {
+};

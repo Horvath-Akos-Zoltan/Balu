@@ -5,6 +5,7 @@
 #include <iostream>
 
 namespace parser {
+    ast::BlockStmt* Parse_(const vector<lexer::Token>& tokens);
     struct ParserError : public Error {
         ParserError(const wstring& message, unsigned long long line, unsigned long long column) : Error(message, line, column) {}
         ParserError(const wstring& message) : Error(message) {}

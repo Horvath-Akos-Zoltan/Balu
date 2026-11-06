@@ -46,8 +46,9 @@ namespace ast {
     // {...Stmt[]}
     struct BlockStmt : public Stmt {
         vector<Stmt*> statements;
+        bool isScopeless = false;
         void stmt() override {}
-        BlockStmt(vector<Stmt*> statements) : statements(statements) {}
+        BlockStmt(vector<Stmt*> statements, bool isScopeless = false) : statements(statements), isScopeless(isScopeless) {}
         BlockStmt() : statements({}) {}
         BlockStmt(BlockStmt&& other) noexcept : statements(std::move(other.statements)) {
             other.statements.clear();
@@ -79,7 +80,7 @@ namespace ast {
             for (auto s : statements) delete s;
         }
         void Dump(int indent = 0, wostream& wcout_ = _wcout) const override {
-            wcout_ << wstring(indent * 2, L' ') << L"BlockStmt" << endl;
+            wcout_ << wstring(indent * 2, L' ') << L"BlockStmt" << (isScopeless ? L" <>" : L"") << endl;
             for (auto s : statements) {
                 if (s) s->Dump(indent + 1, wcout_);
             }

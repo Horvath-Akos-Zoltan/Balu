@@ -34,4 +34,24 @@ namespace parser {
         }
         return block;
     }
+    ast::BlockStmt* Parse_(const vector<lexer::Token>& tokens) {
+        vector<ast::Stmt*> Body;
+        
+        unique_ptr<Parser> p(createParser(tokens));
+
+        while (p->hasTokens())
+        {
+            ast::Stmt* stmt = parse_stmt(p.get());
+            if (stmt) { // Only add valid statements
+                Body.push_back(stmt);
+            }
+        }
+
+        ast::BlockStmt* block = new ast::BlockStmt(Body);
+        if (CompilerOptions.allowOptimization) {
+            ast::Stmt* root = block;
+            ast::optimizer::Optimize(root);
+        }
+        return block;
+    }
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 
 namespace parser {
     ast::Expr* getDefaultValueForType(ast::Type* type) {
@@ -91,6 +92,11 @@ namespace parser {
     }
     ast::Stmt* parse_block_stmt(Parser* p) {
         if (CompilerOptions.verbose) _wcout << L"Parsing block statement at " << p->position() << endl;
+        bool isScopeless = p->currentTokenKind() == lexer::LESS;
+        if (isScopeless) {
+            p->advance();  // eat <
+            p->expect(lexer::GREATER);
+        }
         p->expect(lexer::OPEN_CURLY);  // consume '{'
         vector<ast::Stmt*> statements;
         while (p->hasTokens() && p->currentTokenKind() != lexer::CLOSE_CURLY) {
@@ -99,7 +105,7 @@ namespace parser {
         }
         p->expect(lexer::CLOSE_CURLY);  // consume '}'
         if (p->currentTokenKind() == lexer::SEMICOLON) p->advance();
-        return new ast::BlockStmt(statements);
+        return new ast::BlockStmt(statements, isScopeless);
     };
     ast::Stmt* parse_var_decl_stmt(Parser* p) {
         if (CompilerOptions.verbose) _wcout << L"Parsing variable declaration statement at " << p->position() << endl;
@@ -984,6 +990,52 @@ namespace parser {
             }
         }
         if (p->currentTokenKind() == lexer::SEMICOLON) p->advance();  // Optional semicolon after import statement
-        return new ast::ImportStmt(moduleName, namespaceName);
+        
+        if (!filesystem::exists(moduleName)) {
+            // TODO: add error handling
+            throw new runtime_error(string(moduleName.begin(), moduleName.end()) + " does not exist");
+        }
+
+        // TODO: Handle error
+        string narrowInputFilename(moduleName.begin(), moduleName.end());
+        ifstream inputFile(narrowInputFilename, ios::binary);
+        if (!inputFile.is_open()) {
+            _wcout << L"Error: Unable to open input file." << endl;
+            return nullptr;
+        }
+
+        stringstream buffer;
+        buffer << inputFile.rdbuf();
+        string content = buffer.str();
+        inputFile.close();
+
+        // Check for and remove UTF-8 BOM (0xEF, 0xBB, 0xBF)
+        if (content.size() >= 3 && 
+            (unsigned char)content[0] == 0xEF && 
+            (unsigned char)content[1] == 0xBB && 
+            (unsigned char)content[2] == 0xBF) {
+            content.erase(0, 3);
+        }
+        wstring fileContent;
+        if (!content.empty()) {
+            int size_needed = MultiByteToWideChar(CP_UTF8, 0, content.c_str(), (int)content.size(), NULL, 0);
+            fileContent.resize(size_needed);
+            MultiByteToWideChar(CP_UTF8, 0, content.c_str(), (int)content.size(), &fileContent[0], size_needed);
+        }
+
+        if (CompilerOptions.debug) {
+            _wcout << L"Tokenizing import: " << moduleName << endl;
+        }
+        vector<lexer::Token> tokens = lexer::Tokenize(fileContent);
+        if (CompilerOptions.debug) {
+            _wcout << L"AST conversion of: " << moduleName << endl;
+        }
+        ast::BlockStmt* ast = parser::Parse_(tokens);
+        ast->isScopeless = true;
+        if (CompilerOptions.debug) {
+            _wcout << L"Import done: " << moduleName << endl;
+        }
+        
+        return ast;
     }
 }

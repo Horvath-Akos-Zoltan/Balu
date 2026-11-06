@@ -99,6 +99,7 @@ namespace parser {
         stmt(lexer::OUTLINE, parse_func_decl_stmt);
         stmt(lexer::FN, parse_func_decl_stmt);
         stmt(lexer::OPEN_CURLY, parse_block_stmt);
+        stmt(lexer::LESS, parse_block_stmt);  // <> {}
 
         stmt(lexer::USED, parse_var_decl_stmt);
         stmt(lexer::UNUSED, parse_unused_stmt);
