@@ -3,17 +3,7 @@
 # The Balu Programming Language
 ### Tired of constantly getting compile-time errors?
 ### Try out the Balu programming language! It fixes itself, so your HTML brain can rest easy.
-
-## What is this?
-### The Balu programming language is a gradually typed, garbage collected language
-
-## Why?
-### Programming languages should do what **you** tell them to do. 
-### You want inlining? You don't suggest, you command. 
-### You want outlining? Go ahead!
-### You want a struct to be 5 bytes, not 8? Okay, it shall be done
-### You want to break out of an if block? Can do
-### **You** are the programmer, if **you** want a 200 line function to be inlined, it will be inlined.
+### You don't want to learn a new syntax? We support multiple kinds of syntaxes! (e.g. [Variable declaration](#variable-declaration))
 
 ## How to install?
 ### It's a singular file, so just download it and put it in any folder you'd like
@@ -24,49 +14,6 @@
 ### To ignore the errors, just add the `-np`, or `--no-panic` flag in the command line
 ### For help, add the `-h`, `--help`, `-?`, `/help`, `/h` or `/help` flag in the command line
 
-## Wanna build it yourself?
-### Good luck, you should be able to find what I used in [src/build.bat](src/build.bat)
-### I'm using [g++](https://github.com/skeeto/w64devkit/releases/tag/v2.9.1) and Windows 11
-
-## Curious to see what your code looks like just before compilation? 
-### Use the `-decompile=filename` flag ; replace `filename` with your desired output file's name
-# Types
-### The Balu language is gradually typed, meaning it CAN type statically (give strict types), but you can also create dynamic variables (like python, or javascript)
-## Numbers:
-### byte:
-- 0-255
-- Size: 1 byte
-### bool:
-- 0-1 / false-true
-- Size: 1 byte
-### number:
-- dynamically allocates memory until system-maximum is reached
-- can be in *precise mode*, which makes it allocate as many bytes as needed to store **any** number ; indiated with the '@' character after the number literal
-  - Why would I use this? Well, `10e999 + 1 == 10e999` is usually true, because `10e999` is a stupidly big number, BUT `10e999@ + 1 == 10e999@` returns false (x + 1 > x), because this language likes precision
-  - This may be a lot slower than the system-maximum
-- Size: auto-scales
-## Characters
-### char:
-- Stores a singular character, indicated by surrounding with 's, e.g. 'a'
-- Size: 4 byte
-- Subtypes:
-  - char8:
-    - 0-255
-    - Size: 1 byte
-  - char16:
-    - 0-65535
-    - Size: 2 bytes
-  - char32:
-    - 0-4294967295
-    - Size: 4 bytes
-### string:
-- Stores a sequence of characters, inicated by surrounding with "s, e.g. "abc"
-- Cannot be indexed **yet**
-- Size: 4 bytes / character
-- Subtypes:
-  - string8: 1 byte / character
-  - string16: 2 bytes / character
-  - string32: 4 bytes / character
 ## Variable declaration
 ### See [examples/declarations.lang](examples/declarations.lang) for more examples
 #### Javascript
